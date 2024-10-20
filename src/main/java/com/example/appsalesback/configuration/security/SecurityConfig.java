@@ -2,6 +2,7 @@ package com.example.appsalesback.configuration.security;
 
 import com.example.appsalesback.configuration.security.jwt.JwtFilter;
 import com.example.appsalesback.configuration.security.jwt.JwtProvider;
+import com.example.appsalesback.service.implementation.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -45,24 +46,31 @@ public class SecurityConfig {
                             CorsConfiguration config = new CorsConfiguration();
                             config.setAllowedOrigins(List.of(allowedOrigins));
                             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                            config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                            config.setAllowCredentials(true);
                             return config;
                         }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll()
+                )
                 .addFilterBefore(new JwtFilter(jwtProvider), BasicAuthenticationFilter.class)
                 .build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailService) {
+    public AuthenticationProvider authenticationProvider(UserServiceImpl userService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailService);
+        provider.setUserDetailsService(userService);
         return provider;
     }
 

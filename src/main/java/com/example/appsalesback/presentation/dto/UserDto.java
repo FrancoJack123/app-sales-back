@@ -1,12 +1,14 @@
 package com.example.appsalesback.presentation.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+import java.util.Set;
+
 public record UserDto(
-        Long id,
-        @NotBlank String username,
+        @NotBlank String firstName,
+        @NotBlank String lastName,
         @NotBlank String password,
-        @Email @NotBlank String email) {}
+        @Email @NotBlank String email,
+        Set<String> rolesNames,
+        Set<RoleDto> roles){}

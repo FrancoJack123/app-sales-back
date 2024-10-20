@@ -19,7 +19,6 @@ import static com.example.appsalesback.util.constants.PaginationConstants.DEFAUL
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/suppliers")
-@CrossOrigin(origins = "http://localhost:5173")
 @Tag(name = "Suppliers", description = "Endpoints for managing suppliers")
 public class SupplierController {
     private final SupplierService supplierService;
