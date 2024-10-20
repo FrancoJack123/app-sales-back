@@ -1,0 +1,2 @@
+ALTER TABLE product
+    ADD CONSTRAINT FK_PRODUCT_ON_SUPPLIER FOREIGN KEY (supplier_id) REFERENCES supplier (id);

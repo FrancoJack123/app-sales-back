@@ -1,0 +1,2 @@
+ALTER TABLE `order`
+    ADD CONSTRAINT FK_ORDER_ON_CUSTOMER FOREIGN KEY (customer_id) REFERENCES customer (id);
