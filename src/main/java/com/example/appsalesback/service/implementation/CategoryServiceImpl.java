@@ -6,6 +6,7 @@ import com.example.appsalesback.presentation.dto.CategoryDto;
 import com.example.appsalesback.presentation.dto.CustomerDto;
 import com.example.appsalesback.presentation.response.OptionResponse;
 import com.example.appsalesback.presentation.response.PagedResponse;
+import com.example.appsalesback.service.exception.CategoryNotFoundException;
 import com.example.appsalesback.service.interfaces.CategoryService;
 import com.example.appsalesback.util.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto findByIdCategory(Long id) {
         return categoryRepository.findById(id)
                 .map(categoryMapper::toDto)
-                .orElseThrow(null);
+                .orElseThrow(CategoryNotFoundException::new);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
                     categoryEntity.setId(category.getId());
                     return categoryMapper.toDto(categoryRepository.save(categoryEntity));
                 })
-                .orElseThrow(null);
+                .orElseThrow(CategoryNotFoundException::new);
     }
 
     @Override

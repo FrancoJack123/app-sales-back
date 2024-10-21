@@ -9,6 +9,9 @@ import com.example.appsalesback.persistence.repository.SupplierRepository;
 import com.example.appsalesback.presentation.dto.ProductDto;
 import com.example.appsalesback.presentation.response.OptionResponse;
 import com.example.appsalesback.presentation.response.PagedResponse;
+import com.example.appsalesback.service.exception.CategoryNotFoundException;
+import com.example.appsalesback.service.exception.ProductNotFoundException;
+import com.example.appsalesback.service.exception.SupplierNotFoundException;
 import com.example.appsalesback.service.interfaces.ProductService;
 import com.example.appsalesback.util.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;
@@ -54,17 +57,17 @@ public class ProductServiceImpl implements ProductService{
     public ProductDto findByIdProduct(Long id) {
         return productRepository.findById(id)
                 .map(productMapper::toMinimalDto)
-                .orElseThrow(null);
+                .orElseThrow(ProductNotFoundException::new);
     }
 
     @Override
     public ProductDto saveProduct(ProductDto productDto) {
         Supplier supplier = supplierRepository.findById(productDto.idSupplier())
-                .orElseThrow(null);
+                .orElseThrow(SupplierNotFoundException::new);
 
         Set<Category> categories = productDto.idsCategories().stream()
                 .map(categoryId -> categoryRepository.findById(categoryId)
-                        .orElseThrow(null))
+                        .orElseThrow(CategoryNotFoundException::new))
                 .collect(Collectors.toSet());
 
         Product product = productMapper.toEntity(productDto);
@@ -77,14 +80,14 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductDto updateProduct(Long id, ProductDto productDto) {
         Product product = productRepository.findById(id)
-                .orElseThrow(null);
+                .orElseThrow(ProductNotFoundException::new);
 
         Supplier supplier = supplierRepository.findById(productDto.idSupplier())
-                .orElseThrow(null);
+                .orElseThrow(SupplierNotFoundException::new);
 
         Set<Category> categories = productDto.idsCategories().stream()
                 .map(categoryId -> categoryRepository.findById(categoryId)
-                        .orElseThrow(null))
+                        .orElseThrow(CategoryNotFoundException::new))
                 .collect(Collectors.toSet());
 
         product.setName(productDto.name());

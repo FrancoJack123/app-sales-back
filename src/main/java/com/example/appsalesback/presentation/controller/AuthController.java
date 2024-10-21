@@ -29,7 +29,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping("/sign-up")
-    public ResponseEntity<AuthResponse> registerUser(@RequestBody @Valid UserDto userDto) {
+    public ResponseEntity<AuthResponse> SingUpUser(@RequestBody @Valid UserDto userDto) {
         AuthResponse response = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -43,7 +43,7 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Invalid credentials")
     })
     @PostMapping("/sign-in")
-    public ResponseEntity<AuthResponse> loginUser(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<AuthResponse> SingInUser(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
         String password = credentials.get("password");
 

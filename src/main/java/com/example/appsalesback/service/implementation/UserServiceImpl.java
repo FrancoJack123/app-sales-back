@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public AuthResponse createUser(UserDto userDto) {
         Set<Role> roles = userDto.rolesNames().stream()
                 .map(roleName -> roleRepository.findByRoleName(RoleName.valueOf(roleName))
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid role: " + roleName)))
+                        .orElseThrow(() -> new IllegalArgumentException(String.format("El rol '%s' no es válido. Por favor, verifique los roles proporcionados.", roleName))))
                 .collect(Collectors.toSet());
 
         User user = userMapper.toEntity(userDto);
@@ -69,16 +69,16 @@ public class UserServiceImpl implements UserService {
     public Authentication authenticate(String email, String password) {
         UserDetails userDetails = loadUserByUsername(email);
         if (userDetails == null)
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException(String.format("El usuario con email '%s' no fue encontrado. Verifique sus credenciales.", email));
         if (!passwordEncoder.matches(password, userDetails.getPassword()))
-            throw new BadCredentialsException("Incorrect Password");
+            throw new BadCredentialsException("La contraseña ingresada es incorrecta. Por favor, intente de nuevo.");
         return new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("No se encontró ningún usuario registrado con el email: %s. Por favor, verifique el email ingresado.", username)));
         Set<SimpleGrantedAuthority> grantedAuthorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getRoleName().name()))
                 .collect(Collectors.toSet());

@@ -2,6 +2,7 @@ package com.example.appsalesback.service.implementation;
 
 import com.example.appsalesback.presentation.response.OptionResponse;
 import com.example.appsalesback.presentation.response.PagedResponse;
+import com.example.appsalesback.service.exception.CustomerNotFoundException;
 import com.example.appsalesback.util.mapper.CustomerMapper;
 import com.example.appsalesback.presentation.dto.CustomerDto;
 import com.example.appsalesback.persistence.entity.Customer;
@@ -46,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDto findByIdCustomer(Long id) {
         return customerRepository.findById(id)
                 .map(customerMapper::toDto)
-                .orElseThrow(null);
+                .orElseThrow(CustomerNotFoundException::new);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
                     customerEntity.setId(id);
                     return customerMapper.toDto(customerRepository.save(customerEntity));
                 })
-                .orElseThrow(null);
+                .orElseThrow(CustomerNotFoundException::new);
     }
 
     @Override

@@ -2,10 +2,10 @@ package com.example.appsalesback.service.implementation;
 
 import com.example.appsalesback.persistence.entity.Supplier;
 import com.example.appsalesback.persistence.repository.SupplierRepository;
-import com.example.appsalesback.presentation.dto.CustomerDto;
 import com.example.appsalesback.presentation.dto.SupplierDto;
 import com.example.appsalesback.presentation.response.OptionResponse;
 import com.example.appsalesback.presentation.response.PagedResponse;
+import com.example.appsalesback.service.exception.SupplierNotFoundException;
 import com.example.appsalesback.service.interfaces.SupplierService;
 import com.example.appsalesback.util.mapper.SupplierMapper;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +47,7 @@ public class SupplierServiceImpl implements SupplierService {
     public SupplierDto findByIdSupplier(Long id) {
         return supplierRepository.findById(id)
                 .map(supplierMapper::toDto)
-                .orElseThrow(null);
+                .orElseThrow(SupplierNotFoundException::new);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class SupplierServiceImpl implements SupplierService {
                     supplier.setId(id);
                     return supplierMapper.toDto(supplierRepository.save(supplierEntity));
                 })
-                .orElseThrow(null);
+                .orElseThrow(SupplierNotFoundException::new);
     }
 
     @Override
