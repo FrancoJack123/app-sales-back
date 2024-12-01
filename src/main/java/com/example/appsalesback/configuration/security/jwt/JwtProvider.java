@@ -52,7 +52,7 @@ public class JwtProvider {
                     .build();
 
             return verifier.verify(token);
-        } catch (JWTVerificationException exception) {
+        } catch (Exception exception) {
             throw new JWTVerificationException("Token invalid, not Authorized");
         }
     }

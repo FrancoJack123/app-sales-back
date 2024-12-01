@@ -19,7 +19,6 @@ import static com.example.appsalesback.util.constants.PaginationConstants.DEFAUL
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "http://localhost:5173")
 @Tag(name = "Products", description = "Endpoints for managing products")
 public class ProductController {
     private final ProductService productService;

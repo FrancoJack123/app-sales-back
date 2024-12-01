@@ -12,4 +12,8 @@ public record UserDto(
         @NotBlank String password,
         @Email @NotBlank String email,
         @NotNull Set<String> rolesNames,
+        Boolean accountNonExpired,
+        Boolean accountNonLocked,
+        Boolean credentialsNonExpired,
+        Boolean enabled,
         Set<RoleDto> roles){}

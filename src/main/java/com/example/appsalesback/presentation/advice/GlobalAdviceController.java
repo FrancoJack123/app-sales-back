@@ -1,5 +1,6 @@
 package com.example.appsalesback.presentation.advice;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.appsalesback.presentation.response.ErrorResponse;
 import com.example.appsalesback.service.exception.CategoryNotFoundException;
 import com.example.appsalesback.service.exception.CustomerNotFoundException;
@@ -58,6 +59,17 @@ public class GlobalAdviceController {
                 .code("CUSTOMER_NOT_FOUND")
                 .status(HttpStatus.NOT_FOUND)
                 .message("El cliente solicitado no fue encontrado.")
+                .timeStamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(JWTVerificationException.class)
+    public ErrorResponse handleJWTVerificationException(JWTVerificationException exception) {
+        return ErrorResponse.builder()
+                .code("FORBIDDEN")
+                .status(HttpStatus.FORBIDDEN)
+                .message("Token inválido, no autorizado")
                 .timeStamp(LocalDateTime.now())
                 .build();
     }

@@ -20,7 +20,6 @@ import static com.example.appsalesback.util.constants.PaginationConstants.DEFAUL
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/customers")
-@CrossOrigin(origins = "http://localhost:5173")
 @Tag(name = "Customers", description = "Endpoints for managing customers")
 public class CustomerController {
     private final CustomerService customerService;

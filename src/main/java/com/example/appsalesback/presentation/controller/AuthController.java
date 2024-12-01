@@ -2,7 +2,7 @@ package com.example.appsalesback.presentation.controller;
 
 import com.example.appsalesback.presentation.dto.UserDto;
 import com.example.appsalesback.presentation.response.AuthResponse;
-import com.example.appsalesback.service.interfaces.UserService;
+import com.example.appsalesback.service.interfaces.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Tag(name = "Authentication", description = "Controller for Authentication")
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
     @Operation(summary = "Register a new user")
     @ApiResponses({
@@ -30,7 +30,7 @@ public class AuthController {
     })
     @PostMapping("/sign-up")
     public ResponseEntity<AuthResponse> SingUpUser(@RequestBody @Valid UserDto userDto) {
-        AuthResponse response = userService.createUser(userDto);
+        AuthResponse response = authService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -47,7 +47,7 @@ public class AuthController {
         String email = credentials.get("email");
         String password = credentials.get("password");
 
-        AuthResponse response = userService.loginUser(email, password);
+        AuthResponse response = authService.loginUser(email, password);
         return ResponseEntity.ok(response);
     }
 }

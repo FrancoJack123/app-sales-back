@@ -1,5 +1,6 @@
 package com.example.appsalesback.configuration.security.jwt;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,7 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException, JWTVerificationException {
 
         String jwtToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
@@ -38,10 +39,12 @@ public class JwtFilter extends OncePerRequestFilter {
             String username = jwtProvider.extractUsername(decodedJWT);
             String stringAuthorities = jwtProvider.getSpecificClaim(decodedJWT, "authorities").asString();
 
-            Collection<? extends GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(stringAuthorities);
+            Collection<? extends GrantedAuthority> authorities =
+                    AuthorityUtils.commaSeparatedStringToAuthorityList(stringAuthorities);
 
             SecurityContext context = SecurityContextHolder.createEmptyContext();
-            Authentication authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            Authentication authenticationToken =
+                    new UsernamePasswordAuthenticationToken(username, null, authorities);
             context.setAuthentication(authenticationToken);
             SecurityContextHolder.setContext(context);
         }
