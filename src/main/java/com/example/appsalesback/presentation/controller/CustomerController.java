@@ -26,11 +26,14 @@ public class CustomerController {
 
     @GetMapping("/paginated")
     public PagedResponse<CustomerDto> findAllWithPagination(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phone,
             @RequestParam(defaultValue = DEFAULT_PAGE) Integer page,
             @RequestParam(defaultValue = DEFAULT_SIZE) Integer size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        return customerService.findAllCustomersWithPagination(pageable);
+        return customerService.findAllCustomersWithPagination(name, email, phone, pageable);
     }
 
     @GetMapping()

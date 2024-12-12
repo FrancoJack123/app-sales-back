@@ -42,6 +42,10 @@ public class AuthServiceImpl implements AuthService {
 
         User user = userMapper.toEntity(userDto);
         user.setRoles(roles);
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
+        user.setEnabled(false);
         user.setPassword(passwordEncoder.encode(userDto.password()));
 
         user = userRepository.save(user);
@@ -49,8 +53,7 @@ public class AuthServiceImpl implements AuthService {
         Set<SimpleGrantedAuthority> grantedAuthorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getRoleName().name()))
                 .collect(Collectors.toSet());
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken(user, null, grantedAuthorities);
+        Authentication authentication = this.authenticate(user.getEmail(), userDto.password());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String accessToken = jwtProvider.createToken(authentication);

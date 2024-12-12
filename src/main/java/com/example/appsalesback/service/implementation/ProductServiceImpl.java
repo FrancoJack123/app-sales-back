@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,8 +33,11 @@ public class ProductServiceImpl implements ProductService{
     private final ProductMapper productMapper;
 
     @Override
-    public PagedResponse<ProductDto> findAllProductsWithPagination(Pageable pageable) {
-        Page<ProductDto> productPage = productRepository.findAll(pageable)
+    public PagedResponse<ProductDto> findAllProductsWithPagination(
+            Long supplierId, List<Long> categoryIds, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable)
+    {
+        Page<ProductDto> productPage = productRepository
+                .findByAdvancedSearch(supplierId, categoryIds, minPrice, maxPrice, pageable)
                 .map(productMapper::toDto);
 
         return new PagedResponse<>(

@@ -22,8 +22,8 @@ public class SupplierServiceImpl implements SupplierService {
     private final SupplierMapper supplierMapper;
 
     @Override
-    public PagedResponse<SupplierDto> findAllSuppliersWithPagination(Pageable pageable) {
-        Page<SupplierDto> supplierPage = supplierRepository.findAll(pageable)
+    public PagedResponse<SupplierDto> findAllSuppliersWithPagination(String name, String ruc, Pageable pageable) {
+        Page<SupplierDto> supplierPage = supplierRepository.findByAdvancedSearch(name, ruc, pageable)
                 .map(supplierMapper::toDto);
 
         return new PagedResponse<>(

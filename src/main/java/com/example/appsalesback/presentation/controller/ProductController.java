@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.example.appsalesback.util.constants.PaginationConstants.DEFAULT_PAGE;
@@ -25,11 +26,15 @@ public class ProductController {
 
     @GetMapping("/paginated")
     public PagedResponse<ProductDto> findAllWithPagination(
+            @RequestParam(required = false) Long supplierId,
+            @RequestParam(required = false) List<Long> categoryIds,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(defaultValue = DEFAULT_PAGE) Integer page,
             @RequestParam(defaultValue = DEFAULT_SIZE) Integer size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        return productService.findAllProductsWithPagination(pageable);
+        return productService.findAllProductsWithPagination(supplierId, categoryIds, minPrice, maxPrice, pageable);
     }
 
     @GetMapping()

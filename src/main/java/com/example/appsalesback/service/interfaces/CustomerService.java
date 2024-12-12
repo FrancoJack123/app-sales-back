@@ -9,7 +9,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface CustomerService {
-    PagedResponse<CustomerDto> findAllCustomersWithPagination(Pageable pageable);
+    PagedResponse<CustomerDto> findAllCustomersWithPagination(
+            String name, String email, String phone, Pageable pageable);
     List<OptionResponse> findAllCustomers();
     CustomerDto findByIdCustomer(Long id);
     CustomerDto saveCustomer(CustomerDto customerDto);

@@ -25,11 +25,13 @@ public class SupplierController {
 
     @GetMapping("/paginated")
     public PagedResponse<SupplierDto> findAllWithPagination(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String ruc,
             @RequestParam(defaultValue = DEFAULT_PAGE) Integer page,
             @RequestParam(defaultValue = DEFAULT_SIZE) Integer size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        return supplierService.findAllSuppliersWithPagination(pageable);
+        return supplierService.findAllSuppliersWithPagination(name, ruc, pageable);
     }
 
     @GetMapping()

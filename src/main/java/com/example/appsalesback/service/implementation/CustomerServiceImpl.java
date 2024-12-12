@@ -22,8 +22,9 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
 
     @Override
-    public PagedResponse<CustomerDto> findAllCustomersWithPagination(Pageable pageable) {
-        Page<CustomerDto> customerPage = customerRepository.findAll(pageable)
+    public PagedResponse<CustomerDto> findAllCustomersWithPagination(
+            String name, String email, String phone, Pageable pageable) {
+        Page<CustomerDto> customerPage = customerRepository.findByAdvancedSearch(name, email, phone, pageable)
                 .map(customerMapper::toDto);
 
         return new PagedResponse<>(
