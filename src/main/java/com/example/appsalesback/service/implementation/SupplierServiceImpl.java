@@ -8,11 +8,14 @@ import com.example.appsalesback.presentation.response.PagedResponse;
 import com.example.appsalesback.service.exception.SupplierNotFoundException;
 import com.example.appsalesback.service.interfaces.SupplierService;
 import com.example.appsalesback.util.mapper.SupplierMapper;
+import com.example.appsalesback.util.reportGenerator.SupplierReportGenerate;
 import lombok.RequiredArgsConstructor;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @Service
@@ -20,6 +23,7 @@ import java.util.List;
 public class SupplierServiceImpl implements SupplierService {
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
+    private final SupplierReportGenerate supplierReportGenerate;
 
     @Override
     public PagedResponse<SupplierDto> findAllSuppliersWithPagination(String name, String ruc, Pageable pageable) {
@@ -78,5 +82,17 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public Boolean existsByRucSupplier(String ruc) {
         return supplierRepository.existsByRuc(ruc);
+    }
+
+    @Override
+    public byte[] exportPdf() throws JRException, FileNotFoundException {
+        return supplierReportGenerate.exportToPdf(supplierRepository.findAll()
+                .stream().map(supplierMapper::toDto).toList());
+    }
+
+    @Override
+    public byte[] exportXls() throws JRException, FileNotFoundException {
+        return supplierReportGenerate.exportToXls(supplierRepository.findAll()
+                .stream().map(supplierMapper::toDto).toList());
     }
 }

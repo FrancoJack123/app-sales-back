@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,8 +21,12 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "order_date")
+
+    @Temporal(TemporalType.DATE)
+    @CreationTimestamp
+    @Column(name = "order_date", updatable = false)
     private LocalDate orderDate;
+
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
@@ -29,7 +34,7 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderDetail> orderDetails;
 
     @OneToOne(mappedBy = "order")
